@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>2018xx互联网公司会抽奖现场</title>
+
+  <link rel="stylesheet" href="./index.css"/>
+
+  <script type="text/javascript" src="./jquery.min.js"></script>
+  <script type="text/javascript" src="./easing.js"></script>
+
+</head>
+<body>
+<!-- 主体盒子-->
+<div class="main-box">
+  <!-- 喜迎新年-->
+  <div class="title-box">
+    <img src="images/pc-titile.png" alt=""/>
+  </div>
+  <!-- 装饰点缀-->
+  <div class="desc-box">
+    <img src="images/dianzhui.png" alt=""/>
+  </div>
+  <div class="main">
+    <div id="box-container" class="num-bg-box-container">
+      <div class="num-bg-box">
+        <!-- 数字盒子-->
+        <div class="num_box">
+          <div class="num"></div>
+          <div class="num"></div>
+          <div class="num"></div>
+        </div>
+      </div>
+      <div class="num-bg-box">
+        <!-- 数字盒子-->
+        <div class="num_box">
+          <div class="num"></div>
+          <div class="num"></div>
+          <div class="num"></div>
+        </div>
+      </div>
+      <div class="num-bg-box">
+        <!-- 数字盒子-->
+        <div class="num_box">
+          <div class="num"></div>
+          <div class="num"></div>
+          <div class="num"></div>
+        </div>
+      </div>
+      <div class="num-bg-box">
+        <!-- 数字盒子-->
+        <div class="num_box">
+          <div class="num"></div>
+          <div class="num"></div>
+          <div class="num"></div>
+        </div>
+      </div>
+      <div class="num-bg-box">
+        <!-- 数字盒子-->
+        <div class="num_box">
+          <div class="num"></div>
+          <div class="num"></div>
+          <div class="num"></div>
+        </div>
+      </div>
+      <div class="num-bg-box">
+        <!-- 数字盒子-->
+        <div class="num_box">
+          <div class="num"></div>
+          <div class="num"></div>
+          <div class="num"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 操作按钮-->
+<div class="btn-box">
+  <div class="btn start" data-count="12">送美丽</div>
+  <div class="btn start" data-count="6">送健康</div>
+  <div class="btn start" data-count="1">送祝福</div>
+  <div class="btn stop">停止抽奖</div>
+</div>
+<div class="list-box">
+  <div class="list">
+    中奖名单
+    <div class="ml-list">
+      <div class="list-item">
+        <div>送美丽</div>
+        <ul id="ml-ul">
+        </ul>
+      </div>
+      <div class="list-item">
+        <div>送健康</div>
+        <ul id="jk-ul">
+        </ul>
+      </div>
+      <div class="list-item">
+        <div>送祝福</div>
+        <ul id="zf-ul">
+        </ul>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<!--js-->
+<script>
+
+  var u = 100;
+  var n = 1;
+  var timer; //定义滚动的定时器
+  var result = 18912345678; //指定中奖结果,可以抽取指定数组中的某一个
+  var isBegin = false; //标识能否开始抽奖
+  var zhongjiang = []
+  var tmp_zj = []
+  var zf_list = []
+  var ml_list = []
+  var jk_list = []
+  $(".num").css('backgroundPositionY', 200);//开始13888888888
+  $(".num").eq(0).css('backgroundPositionY', -100)
+  $(".num").eq(1).css('backgroundPositionY', -300)
+
+  //执行数字滚动
+  function run() {
+    $("#box-container").innerHTML = ""
+    n++;
+    $(".num").each(function (index) {
+      var _num = $(this);
+      _num.animate({
+        backgroundPositionY: ((u + 1) * n * (index + 1))
+      }, 100);
+
+    });
+    timer = window.setTimeout(run, 100);
+    isBegin = true;
+  }
+
+  $(function () {
+    //开始抽奖
+    $('.start').click(function () {
+      if (isBegin) {
+        return false;
+      } else {
+        var count = $(this).data('count')
+        tmp_zj = []
+        while (tmp_zj.length < count) {
+          var r = Math.floor(Math.random() * 500) + 1;
+          if ((tmp_zj.indexOf(r) === -1) && (ml_list.indexOf(r) === -1) && (jk_list.indexOf(r) === -1) && (zf_list.indexOf(r) === -1)){
+            tmp_zj.push(r);
+          }
+        }
+        if (count == 1) {
+          zf_list = tmp_zj
+        }
+        if (count == 6) {
+          jk_list = tmp_zj
+        }
+        if (count == 12) {
+          ml_list = tmp_zj
+        }
+        $("#box-container").html("")
+        tmp_zj.forEach(function () {
+          $("#box-container").append(' <div class="num-bg-box">\n' +
+            '        <!-- 数字盒子-->\n' +
+            '        <div class="num_box">\n' +
+            '          <div class="num"></div>\n' +
+            '          <div class="num"></div>\n' +
+            '          <div class="num"></div>\n' +
+            '        </div>\n' +
+            '      </div>')
+        })
+        run();
+      }
+    });
+    //停止抽奖
+    $('.stop').click(function () {
+
+      $(".num_box").each(function (index) {
+        var box = $(this)
+        var nums = box.children(".num")
+        result = tmp_zj[index]
+        var num_arr = (result + '').split('');
+        if (num_arr.length == 2) {
+          num_arr = ["0"].concat(num_arr)
+        }
+        if (num_arr.length == 1) {
+          num_arr = ["0", "0"].concat(num_arr)
+        }
+        console.log(num_arr)
+        nums.each(function (index) {
+          var _num = $(this);
+          setTimeout(function () {
+            _num.animate({
+              backgroundPositionY: (u * 60) - (u * num_arr[index])
+            }, {
+              duration: 500,
+              easing: "easeInOutCirc",
+              complete: function () {
+                if (index == 10) {
+                  isBegin = false;
+                }
+                $("#ml-ul").html("")
+                ml_list.forEach(function (v) {
+                  $("#ml-ul").append("<li>" + v + "</li>")
+                })
+                $("#jk-ul").html("")
+                jk_list.forEach(function (v) {
+                  $("#jk-ul").append("<li>" + v + "</li>")
+                })
+                $("#zf-ul").html("")
+                zf_list.forEach(function (v) {
+                  $("#zf-ul").append("<li>" + v + "</li>")
+                })
+
+
+              }
+            });
+          }, 100);
+        });
+      })
+
+      window.clearTimeout(timer);
+      isBegin = false;
+    });
+  });
+</script>
+
+</body>
+</html>
